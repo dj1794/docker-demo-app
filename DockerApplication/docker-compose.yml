@@ -1,0 +1,30 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
+
+version: '3.4'
+
+services:
+  ms-sql-server:
+    container_name: sqlserver
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    environment: 
+        - ACCEPT_EULA=Y
+        - SA_PASSWORD=dinesh#01
+    ports:
+        - "1433:1433"
+    networks:
+        - training-network
+    volumes:
+        - sqldata:/var/opt/mssql
+  dockerapplication-api:
+    container_name: microservice-api
+    build: .
+    ports:
+        - "7200:80"
+    depends_on:
+        - ms-sql-server
+    networks:
+        - training-network
+volumes:
+      sqldata:
+networks:
+      training-network:
